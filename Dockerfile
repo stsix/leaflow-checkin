@@ -8,7 +8,13 @@ WORKDIR /app
 COPY . .
 
 # 安装Python依赖
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir requests
 
-# 设置容器启动时执行的命令
-ENTRYPOINT ["python3", "checkin_token.py"]
+# 设置环境变量（可选，可以在运行时覆盖）
+ENV LEAFLOW_COOKIES=""
+ENV QYWX_KEY=""
+ENV TG_BOT_TOKEN=""
+ENV TG_USER_ID=""
+
+# 先运行配置准备脚本，然后运行签到脚本
+CMD python3 get_tokens_helper.py && python3 checkin_token.py --notify
